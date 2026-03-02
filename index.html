@@ -2,21 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{!'SymboLab'} v1.2 - The Chaos Engine</title>
+    <title>{!'SymboLab'} v1.4 - The Hybrid Engine</title>
     <style>
         :root { --neon-green: #00ff41; --bg-black: #0d0d0d; --editor-bg: #1a1a1a; --error-red: #ff4141; }
-        body { background: var(--bg-black); color: var(--neon-green); font-family: 'Courier New', Courier, monospace; padding: 20px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 900px; border: 2px solid var(--neon-green); padding: 25px; box-shadow: 0 0 20px rgba(0, 255, 65, 0.2); border-radius: 8px; }
+        body { background: var(--bg-black); color: var(--neon-green); font-family: 'Courier New', monospace; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 900px; border: 2px solid var(--neon-green); padding: 25px; box-shadow: 0 0 20px rgba(0, 255, 65, 0.3); border-radius: 8px; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         h1 { margin: 0; text-shadow: 0 0 10px var(--neon-green); font-size: 24px; }
-        .docs-link { color: var(--neon-green); text-decoration: none; border: 1px solid var(--neon-green); padding: 5px 12px; font-size: 14px; transition: 0.3s; border-radius: 4px; }
-        .docs-link:hover { background: var(--neon-green); color: black; box-shadow: 0 0 10px var(--neon-green); }
-        textarea { width: 100%; height: 350px; background: var(--editor-bg); color: var(--neon-green); border: 1px solid #333; padding: 15px; font-size: 16px; outline: none; box-sizing: border-box; resize: vertical; border-radius: 4px; }
-        textarea:focus { border-color: var(--neon-green); }
-        button { background: var(--neon-green); color: black; border: none; padding: 15px; cursor: pointer; font-weight: bold; width: 100%; font-size: 18px; margin-top: 15px; border-radius: 4px; transition: 0.2s; }
-        button:active { transform: scale(0.98); }
-        #console { background: black; color: var(--neon-green); padding: 20px; margin-top: 20px; border-radius: 4px; min-height: 100px; border: 1px dashed #333; white-space: pre-wrap; font-size: 15px; }
+        .docs-link { color: var(--neon-green); text-decoration: none; border: 1px solid var(--neon-green); padding: 5px 12px; font-size: 14px; border-radius: 4px; transition: 0.3s; }
+        .docs-link:hover { background: var(--neon-green); color: black; }
+        textarea { width: 100%; height: 350px; background: var(--editor-bg); color: var(--neon-green); border: 1px solid #333; padding: 15px; font-size: 16px; outline: none; box-sizing: border-box; resize: vertical; }
+        button { background: var(--neon-green); color: black; border: none; padding: 15px; cursor: pointer; font-weight: bold; width: 100%; font-size: 18px; margin-top: 15px; border-radius: 4px; }
+        #console { background: black; color: var(--neon-green); padding: 20px; margin-top: 20px; border: 1px dashed #333; min-height: 120px; white-space: pre-wrap; }
         .error { color: var(--error-red); font-weight: bold; }
     </style>
 </head>
@@ -24,25 +21,24 @@
 
 <div class="container">
     <div class="header">
-        <h1>{!'SymboLab'} v1.2</h1>
-        <a href="https://symbolab-docs.example.com" target="_blank" class="docs-link">? How to Use</a>
+        <h1>{!'SymboLab'} v1.4</h1>
+        <a href="handbook.html" target="_blank" class="docs-link">? How to Use</a>
     </div>
 
     <textarea id="editor" spellcheck="false">{
-~ Welcome to the Chaos Engine ~
-~ The 1.5x Yapping Rule is Active ~
+~ Test the Hybrid Engine ~
+~ input is string by default ~
 
-$num1%25
-$num2%5
-$res%num1.num2
+?'What is your name?'user
+!'Hello, ',user**
 
-!'Result of Division: ',/res/
+~ Now for math ~
+?'Enter a number:'n
+$val%\'n**'\
+$res%val.2
 
-~ Addition via Successor Loop ~
-<2|res+>
-!'After adding 2: ',/res/
-
-~ Brah Check: If I yap more, I crash ~
+~ Use Freezer on the value ~
+!'Half of your number is: ',/res**/
 }</textarea>
 
     <button onclick="runEngine()">RUN ENGINE</button>
@@ -57,39 +53,54 @@ function runEngine() {
     let variables = {};
 
     try {
-        // 1. BRAH CHECK: 1.5x Ratio
         let commentMatches = rawCode.match(/~.*?~/gs) || [];
         let commentLen = commentMatches.reduce((acc, val) => acc + val.length, 0);
         let functionalCode = rawCode.replace(/~.*?~/gs, "").replace(/\s/g, "");
         let codeLen = functionalCode.length;
 
         if (commentLen > (codeLen * 1.5) && codeLen > 0) {
-            output.innerHTML = `<span class="error">Brah this isnt a notebook: You have ${commentLen} chars of yapping. With only ${codeLen} chars of code, you're past the 1.5x limit!</span>`;
+            output.innerHTML = `<span class="error">Brah this isnt a notebook: Ratio too high!</span>`;
             return;
         }
 
-        // 2. SYNTAX WRAPPER
         if (!rawCode.startsWith("{") || !rawCode.endsWith("}")) {
-            output.innerHTML = `<span class="error">SyntaxError: Use { } or the code doesn't exist.</span>`;
+            output.innerHTML = `<span class="error">SyntaxError: Use { }</span>`;
             return;
         }
         
         let code = rawCode.slice(1, -1).replace(/~.*?~/gs, "").trim();
         let lines = code.split(/\n|;/);
 
-        // 3. EXECUTION LOOP
         for (let line of lines) {
             line = line.trim();
             if (!line) continue;
 
-            // OUTPUT !'text'
-            if (line.startsWith("!")) {
+            // PROBE: ?'prompt'var
+            if (line.startsWith("?")) {
+                let promptMsg = line.match(/'(.*?)'/)[1];
+                let vName = line.split("'")[2].trim().replace("$","");
+                variables[vName] = prompt(promptMsg);
+            }
+
+            // OUTPUT !'text',var**,/var**/
+            else if (line.startsWith("!")) {
                 let parts = line.substring(1).split(',');
                 let finalOut = parts.map(p => {
                     p = p.trim();
                     if (p.startsWith("'") && p.endsWith("'")) return p.slice(1, -1);
-                    if (p.startsWith("/") && p.endsWith("/")) return variables[p.slice(1, -1)] ?? "undefined";
-                    return variables[p] ?? p;
+                    
+                    // Handle Freezer + Value: /var**/
+                    if (p.startsWith("/") && p.endsWith("/") && p.includes("**")) {
+                        let vName = p.slice(1, -3).replace("$", "");
+                        return String(variables[vName]);
+                    }
+                    
+                    // Handle Value: var**
+                    if (p.endsWith("**")) {
+                        let vName = p.slice(0, -2).replace("$", "");
+                        return variables[vName] !== undefined ? variables[vName] : "undefined";
+                    }
+                    return p;
                 }).join("");
                 output.innerHTML += finalOut + "\n";
             }
@@ -100,12 +111,13 @@ function runEngine() {
                 vName = vName.trim().replace("$", "");
                 vVal = vVal.trim();
 
-                // MELTER \'var'\
+                // MELTER \'var**'\
                 if (vVal.startsWith("\\'") && vVal.endsWith("'\\")) {
                     let target = vVal.slice(2, -2);
+                    if (target.endsWith("**")) target = target.slice(0, -2);
                     let val = variables[target];
                     if (isNaN(parseFloat(val))) {
-                        output.innerHTML += `<span class="error">ValueError: Bruh why u trying to change "${val}" to a number?</span>\n`;
+                        output.innerHTML += `<span class="error">Bruh why melt "${val}"?</span>\n`;
                         return;
                     }
                     variables[vName] = parseFloat(val);
@@ -123,13 +135,13 @@ function runEngine() {
 
                 if (op === ".") {
                     if (v2 === 0) {
-                        output.innerHTML += `<span class="error">ZeroGravityError: Trying to divide by 0? You want the universe to explode?</span>\n`;
+                        output.innerHTML += `<span class="error">ZeroGravityError!</span>\n`;
                         return;
                     }
                     variables[n1.trim().replace("$","")] = v1 / v2;
                 } else {
                     if (v2 < 0 && v1 % 2 === 0) {
-                        output.innerHTML += `<span class="error">Stap trying to crash it: {!'SymboLab'} doesn't believe in imaginary friends.</span>\n`;
+                        output.innerHTML += `<span class="error">Stap: No imaginary friends.</span>\n`;
                         return;
                     }
                     variables[n2.trim().replace("$","")] = v2 < 0 ? -Math.pow(Math.abs(v2), 1/v1) : Math.pow(v2, 1/v1);
@@ -143,13 +155,14 @@ function runEngine() {
                 let count = variables[countPart] ?? parseInt(countPart);
 
                 for (let i = 0; i < count; i++) {
-                    if (inner.endsWith("+")) variables[inner.slice(0, -1).trim().replace("$","")]++;
-                    else if (inner.endsWith("-")) variables[inner.slice(0, -1).trim().replace("$","")]--;
+                    let target = inner.slice(0, -1).trim().replace("$","");
+                    if (inner.endsWith("+")) variables[target]++;
+                    else if (inner.endsWith("-")) variables[target]--;
                 }
             }
         }
     } catch (e) {
-        output.innerHTML += `<span class="error">SYSTEM OVERHEAT: ${e.message}</span>`;
+        output.innerHTML += `<span class="error">OVERHEAT: ${e.message}</span>`;
     }
 }
 </script>
